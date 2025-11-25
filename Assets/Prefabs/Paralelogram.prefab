@@ -180,6 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddf303e0f952751469217236b46b2355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AngleStep: 45
   m_MaterialSelector: {fileID: 11400000, guid: db5bcbb8b195ad84ba9786065d6c385d, type: 2}
 --- !u!114 &-9092329073845543408
 MonoBehaviour:

@@ -8,6 +8,8 @@ public class FiguresController : MonoBehaviour
     private Vector3 offset;
     private Vector2 currentPointerPos;
 
+    public float m_AngleStep = 45f;
+
     private VisibleGrid grid;   // referencia al grid
 
     public MaterialSelector m_MaterialSelector;
@@ -64,7 +66,7 @@ public class FiguresController : MonoBehaviour
 
             if (hit.collider != null && hit.collider.gameObject == gameObject)
             {
-                transform.Rotate(0f, 0, 45f);
+                transform.Rotate(0f, 0, m_AngleStep);
             }
         }
     }
