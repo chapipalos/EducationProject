@@ -26,21 +26,18 @@ public class FigureCreator : MonoBehaviour
     {
         Mesh m = new Mesh();
 
-        float cateto = 1f;
-        float hipotenusa = Mathf.Sqrt(2f);
-
         m.vertices = new Vector3[]
         {
             new Vector3(0, 0, 0),                  // A (origen)
-            new Vector3(cateto, 0, 0),             // B (base)
-            new Vector3(cateto + 1f, 1f, 0),       // C (desplazado por la hipotenusa)
-            new Vector3(1f, 1f, 0)                 // D (lado superior)
+            new Vector3(1, 0, 0),             // B (base)
+            new Vector3(1, 1f, 0),       // C (desplazado por la hipotenusa)
+            new Vector3(2f, 1f, 0)                 // D (lado superior)
         };
 
         m.triangles = new int[]
         {
             0, 1, 2,
-            0, 2, 3
+            1, 3, 2
         };
 
         m.RecalculateNormals();
@@ -55,14 +52,11 @@ public class FigureCreator : MonoBehaviour
     {
         Mesh m = new Mesh();
 
-        float cateto = Mathf.Sqrt(2f);
-        float hipotenusa = Mathf.Sqrt(cateto * cateto * 2f);
-
         m.vertices = new Vector3[]
         {
             new Vector3(0, 0, 0),          // A
-            new Vector3(cateto, 0, 0),     // B
-            new Vector3(0, cateto, 0)      // C
+            new Vector3(2, 0, 0),     // B
+            new Vector3(0, 2, 0)      // C
         };
 
         m.triangles = new int[] { 0, 1, 2 };
@@ -79,14 +73,11 @@ public class FigureCreator : MonoBehaviour
     {
         Mesh m = new Mesh();
 
-        float cateto = 2f;
-        float hipotenusa = Mathf.Sqrt(cateto * cateto * 2f);
-
         m.vertices = new Vector3[]
         {
             new Vector3(0, 0, 0),          // A
-            new Vector3(cateto, 0, 0),     // B
-            new Vector3(0, cateto, 0)      // C
+            new Vector3(3, 0, 0),     // B
+            new Vector3(0, 3, 0)      // C
         };
 
         m.triangles = new int[] { 0, 1, 2 };
