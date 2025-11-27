@@ -19,7 +19,10 @@ public class MaterialSelectorController : MonoBehaviour
             Debug.LogWarning("m_MaterialSelector no está asignado en MaterialSelectorController.");
             return;
         }
-        List<Material> assignedMaterials = m_MaterialSelector.GetAllMaterials();
+
+        List<Material> assignedMaterials = new List<Material>();
+        assignedMaterials.AddRange(m_MaterialSelector.GetAllMaterials());
+
         foreach (Transform figureTransform in m_FiguresParent.transform)
         {
             Renderer renderer = figureTransform.GetComponent<Renderer>();

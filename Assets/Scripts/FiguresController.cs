@@ -17,7 +17,7 @@ public class FiguresController : MonoBehaviour
     private void Awake()
     {
         cam = Camera.main;
-        grid = FindObjectOfType<VisibleGrid>();
+        grid = FindFirstObjectByType<VisibleGrid>();
 
         if (grid == null)
             Debug.LogWarning("No se encontró VisibleGrid en la escena.");
