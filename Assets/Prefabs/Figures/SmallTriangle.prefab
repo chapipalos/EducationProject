@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8053549429212787526}
   - component: {fileID: -9168701132572318401}
   - component: {fileID: 2627132113902306921}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SmallTriangle
   m_TagString: Figure
   m_Icon: {fileID: 0}
