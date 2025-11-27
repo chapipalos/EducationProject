@@ -52,11 +52,13 @@ public class FigureCreator : MonoBehaviour
     {
         Mesh m = new Mesh();
 
+        float cateto = Mathf.Sqrt(2f);
+
         m.vertices = new Vector3[]
         {
             new Vector3(0, 0, 0),          // A
-            new Vector3(2, 0, 0),     // B
-            new Vector3(0, 2, 0)      // C
+            new Vector3(cateto, 0, 0),     // B
+            new Vector3(0, cateto, 0)      // C
         };
 
         m.triangles = new int[] { 0, 1, 2 };
@@ -76,8 +78,8 @@ public class FigureCreator : MonoBehaviour
         m.vertices = new Vector3[]
         {
             new Vector3(0, 0, 0),          // A
-            new Vector3(3, 0, 0),     // B
-            new Vector3(0, 3, 0)      // C
+            new Vector3(2, 0, 0),     // B
+            new Vector3(0, 2, 0)      // C
         };
 
         m.triangles = new int[] { 0, 1, 2 };
