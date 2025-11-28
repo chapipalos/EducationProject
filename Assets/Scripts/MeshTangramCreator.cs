@@ -11,6 +11,12 @@ public class MeshTangramCreator : MonoBehaviour
 
     public void GenerateTangramMesh()
     {
+        if(string.IsNullOrWhiteSpace(m_NameMesh) && string.IsNullOrEmpty(m_NameMesh))
+        {
+            Debug.LogError("Mesh name is invalid.");
+            return;
+        }
+
         MeshFilter[] filters = m_FiguresParent.GetComponentsInChildren<MeshFilter>();
         List<CombineInstance> combineList = new List<CombineInstance>();
 
@@ -32,6 +38,8 @@ public class MeshTangramCreator : MonoBehaviour
         string path = $"Assets/Meshes/Levels/{m_NameMesh}.asset";
         AssetDatabase.CreateAsset(finalMesh, path);
         AssetDatabase.SaveAssets();
+
+        m_NameMesh = string.Empty;
     }
 }
 

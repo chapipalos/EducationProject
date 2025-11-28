@@ -39,3 +39,81 @@ MonoBehaviour:
       m_Amount: 1
     - m_Figure: {fileID: 6461169650922881215, guid: 02e8e800cc22a2c47b698b7aa01972cb, type: 3}
       m_Amount: 1
+  - m_LevelName: Tulip
+    m_LevelMesh: {fileID: 7489745587228406968, guid: 90931b71e22cb804cbbc100bc0e90a89, type: 3}
+    m_Figures:
+    - m_Figure: {fileID: 8727061152263404618, guid: 68e73443f980c574793c546e480aa94e, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5179361169655249495, guid: 4c4d495a2874ba94a863927b98ff54e5, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6931872613893558566, guid: 47cf50cac5a949f479a5561d585f70ba, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6461169650922881215, guid: 02e8e800cc22a2c47b698b7aa01972cb, type: 3}
+      m_Amount: 1
+  - m_LevelName: Chicken
+    m_LevelMesh: {fileID: 8377053426096632268, guid: 5637f0ac77dd1df4dbdc29c6020ea8f1, type: 3}
+    m_Figures:
+    - m_Figure: {fileID: 8727061152263404618, guid: 68e73443f980c574793c546e480aa94e, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5179361169655249495, guid: 4c4d495a2874ba94a863927b98ff54e5, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6931872613893558566, guid: 47cf50cac5a949f479a5561d585f70ba, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6461169650922881215, guid: 02e8e800cc22a2c47b698b7aa01972cb, type: 3}
+      m_Amount: 1
+  - m_LevelName: AirPlane
+    m_LevelMesh: {fileID: 2783277884660647233, guid: ae1d28d5cc7d45f45be4c3e99a4d5829, type: 3}
+    m_Figures:
+    - m_Figure: {fileID: 8727061152263404618, guid: 68e73443f980c574793c546e480aa94e, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5179361169655249495, guid: 4c4d495a2874ba94a863927b98ff54e5, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6931872613893558566, guid: 47cf50cac5a949f479a5561d585f70ba, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6461169650922881215, guid: 02e8e800cc22a2c47b698b7aa01972cb, type: 3}
+      m_Amount: 1
+  - m_LevelName: House
+    m_LevelMesh: {fileID: 991679357701557164, guid: 478f2797d09f43f4baed89f60a4e7d4b, type: 3}
+    m_Figures:
+    - m_Figure: {fileID: 8727061152263404618, guid: 68e73443f980c574793c546e480aa94e, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5179361169655249495, guid: 4c4d495a2874ba94a863927b98ff54e5, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6931872613893558566, guid: 47cf50cac5a949f479a5561d585f70ba, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6461169650922881215, guid: 02e8e800cc22a2c47b698b7aa01972cb, type: 3}
+      m_Amount: 1
+  - m_LevelName: Fish
+    m_LevelMesh: {fileID: 8699276192012725655, guid: a6fb1d3786cddfe4e9586e2f1017034d, type: 3}
+    m_Figures:
+    - m_Figure: {fileID: 8727061152263404618, guid: 68e73443f980c574793c546e480aa94e, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5179361169655249495, guid: 4c4d495a2874ba94a863927b98ff54e5, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6931872613893558566, guid: 47cf50cac5a949f479a5561d585f70ba, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6461169650922881215, guid: 02e8e800cc22a2c47b698b7aa01972cb, type: 3}
+      m_Amount: 1
+  - m_LevelName: Rocket
+    m_LevelMesh: {fileID: 8351069096612520890, guid: b079e33b2074049418e972d327485e68, type: 3}
+    m_Figures:
+    - m_Figure: {fileID: 8727061152263404618, guid: 68e73443f980c574793c546e480aa94e, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5179361169655249495, guid: 4c4d495a2874ba94a863927b98ff54e5, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6931872613893558566, guid: 47cf50cac5a949f479a5561d585f70ba, type: 3}
+      m_Amount: 2
+    - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
+      m_Amount: 1
+    - m_Figure: {fileID: 6461169650922881215, guid: 02e8e800cc22a2c47b698b7aa01972cb, type: 3}
+      m_Amount: 1

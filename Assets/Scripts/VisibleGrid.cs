@@ -1,4 +1,6 @@
+using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 [ExecuteAlways]
 public class VisibleGrid : MonoBehaviour
@@ -61,4 +63,29 @@ public class VisibleGrid : MonoBehaviour
         lr.SetPosition(0, start);
         lr.SetPosition(1, end);
     }
+
+    public void destroyChildren()
+    {
+        for(int i = 0; i < transform.childCount; i++)
+        {
+            DestroyImmediate(transform.GetChild(i).gameObject);
+            i--;
+        }
+    }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(VisibleGrid))]
+    public class TriangleRectangleEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
+            VisibleGrid myScript = (VisibleGrid)target;
+            if (GUILayout.Button("Eliminate Children"))
+            {
+                myScript.destroyChildren();
+            }
+        }
+    }
+#endif
 }
