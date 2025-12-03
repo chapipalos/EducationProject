@@ -7,7 +7,8 @@ public class MaterialSelectorController : MonoBehaviour
     public GameObject m_FiguresParent;
 
     public MaterialSelector m_MaterialSelector;
-    private void Awake()
+
+    public void SetColors()
     {
         if (m_FiguresParent == null)
         {
@@ -29,7 +30,7 @@ public class MaterialSelectorController : MonoBehaviour
             if (renderer != null)
             {
                 int randomIndex = Random.Range(0, assignedMaterials.Count);
-                Material randomMat =  assignedMaterials[randomIndex];
+                Material randomMat = assignedMaterials[randomIndex];
                 if (randomMat != null)
                 {
                     renderer.material = randomMat;

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LevelMenuController : MonoBehaviour
@@ -54,6 +55,7 @@ public class LevelMenuController : MonoBehaviour
         int buttonIndex = m_Buttons.IndexOf(clickedButton);
         int levelIndex = (m_FirstLevelIndex + buttonIndex) % m_Levels.Count;
         GameManager.m_CurrentLevelIndex = levelIndex;
-        Debug.Log("Selected Level: " + m_Levels[levelIndex].name);
+        Debug.Log("Selected Level: " + m_Levels[GameManager.m_CurrentLevelIndex].name);
+        SceneManager.LoadScene("Game");
     }
 }

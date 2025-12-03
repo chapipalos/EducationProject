@@ -1,36 +1,53 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TangramShapeChecker : MonoBehaviour
 {
-    [Header("Solución (Valores esperados)")]
-    public float targetArea = 1f;
+    [Header("Tolerancias")]
     public float areaTolerance = 0.01f;
-
-    public List<Vector2> targetHull = new List<Vector2>();
     public float hullTolerance = 0.01f;
 
-    public bool CheckTangramSolution(Mesh tangramMesh)
+    public Transform m_FiguresParent;
+    private GameObject m_FigureToCheck;
+
+    private void Start()
     {
-        // 1. Bounding
-        Bounds b = tangramMesh.bounds;
+        GetComponent<Button>().onClick.AddListener(CompareMeshes);
+        m_FigureToCheck = GameObject.FindGameObjectWithTag("Shape");
+    }
 
-        // 2. Proyección a 2D
-        Vector2[] verts2D = ProjectTo2D(tangramMesh);
+    public void CompareMeshes()
+    {
+        Mesh meshA = m_FigureToCheck.GetComponent<MeshFilter>().mesh;
+        Mesh meshB = GenerateTangramMesh();
 
-        // 3. Área
-        float area = PolygonArea(verts2D, tangramMesh.triangles);
+        // --- Proyección a 2D ---
+        Vector2[] vertsA = ProjectTo2D(meshA);
+        Vector2[] vertsB = ProjectTo2D(meshB);
 
-        if (Mathf.Abs(area - targetArea) > areaTolerance)
-            return false;
+        // --- Área ---
+        float areaA = PolygonArea(vertsA, meshA.triangles);
+        float areaB = PolygonArea(vertsB, meshB.triangles);
 
-        // 4. Convex hull
-        List<Vector2> hull = ConvexHull(new List<Vector2>(verts2D));
+        if (Mathf.Abs(areaA - areaB) > areaTolerance)
+        {
+            Debug.Log(false);
+            return;
+        }
 
-        if (!CompareHulls(hull, targetHull, hullTolerance))
-            return false;
+        // --- Convex Hull ---
+        List<Vector2> hullA = ConvexHull(new List<Vector2>(vertsA));
+        List<Vector2> hullB = ConvexHull(new List<Vector2>(vertsB));
 
-        return true;
+        if (!CompareHulls(hullA, hullB, hullTolerance))
+        {
+            Debug.Log(false);
+            return;
+        }
+
+        Debug.Log(true);
     }
 
     Vector2[] ProjectTo2D(Mesh mesh)
@@ -74,6 +91,7 @@ public class TangramShapeChecker : MonoBehaviour
 
         List<Vector2> hull = new List<Vector2>();
 
+        // Lower hull
         foreach (var p in points)
         {
             while (hull.Count >= 2 &&
@@ -83,8 +101,8 @@ public class TangramShapeChecker : MonoBehaviour
             hull.Add(p);
         }
 
+        // Upper hull
         int t = hull.Count + 1;
-
         for (int i = points.Count - 1; i >= 0; i--)
         {
             var p = points[i];
@@ -116,5 +134,28 @@ public class TangramShapeChecker : MonoBehaviour
         }
 
         return true;
+    }
+
+    public Mesh GenerateTangramMesh()
+    {
+        MeshFilter[] filters = m_FiguresParent.GetComponentsInChildren<MeshFilter>();
+        List<CombineInstance> combineList = new List<CombineInstance>();
+
+        foreach (MeshFilter mf in filters)
+        {
+            if (mf.sharedMesh == null) continue;
+
+            CombineInstance ci = new CombineInstance();
+            ci.mesh = mf.sharedMesh;
+            ci.transform = mf.transform.localToWorldMatrix;
+            combineList.Add(ci);
+        }
+
+        Mesh finalMesh = new Mesh();
+        finalMesh.CombineMeshes(combineList.ToArray(), true, true);
+        finalMesh.RecalculateNormals();
+        finalMesh.RecalculateBounds();
+
+        return finalMesh;
     }
 }
