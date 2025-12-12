@@ -179,9 +179,20 @@ public class TangramShapeChecker : MonoBehaviour
         if (m_CompletedText != null)
             m_CompletedText.gameObject.SetActive(true);
 
+        GameManager.m_LevelsCompleted++;
         GameManager.m_CurrentLevelIndex++;
-        yield return new WaitForSeconds(3f);
+        if (GameManager.m_LevelsCompleted >= m_CurrentLevel.GetAllLevels().Count)
+        {
+            GameManager.m_IsGameOver = true;
+            yield return new WaitForSeconds(0f);
+            SceneManager.LoadScene("Stats");
+        }
+        else
+        {
+            yield return new WaitForSeconds(3f);
+            GameManager.m_TotalTime -= 3f;
+            SceneManager.LoadScene("Game");
+        }
 
-        SceneManager.LoadScene("Game");
     }
 }
