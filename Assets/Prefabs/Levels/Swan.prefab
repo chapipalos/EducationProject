@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 663891113660950767}
   - component: {fileID: 530329478738413819}
   - component: {fileID: 6881443942749838366}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Swan
-  m_TagString: Untagged
+  m_TagString: Shape
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

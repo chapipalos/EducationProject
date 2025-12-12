@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4903827766674350967}
   - component: {fileID: 6221589983466250470}
   - component: {fileID: 5561477629266943353}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Candle
-  m_TagString: Untagged
+  m_TagString: Shape
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

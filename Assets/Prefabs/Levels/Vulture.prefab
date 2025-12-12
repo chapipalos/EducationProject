@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 7247614511356926207}
   - component: {fileID: 66424800226041443}
   - component: {fileID: 4394818762463223201}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Vulture
-  m_TagString: Untagged
+  m_TagString: Shape
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

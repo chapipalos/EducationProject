@@ -25,6 +25,7 @@ public class LevelData
     public string m_LevelName;
     public GameObject m_LevelMesh;
     public List<LevelsFigures> m_Figures = new List<LevelsFigures>();
+    public float m_MatchThreshold;
 }
 
 [System.Serializable]

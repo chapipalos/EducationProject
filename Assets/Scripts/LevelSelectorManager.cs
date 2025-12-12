@@ -12,20 +12,22 @@ public class LevelSelectorManager : MonoBehaviour
 
     public MaterialSelectorController m_MaterialController;
 
+    private VisibleGrid grid;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
+        grid = FindFirstObjectByType<VisibleGrid>();
+
         for (int i = 0; i < m_PositionsParent.childCount; i++)
         {
             m_FiguresPositions.Add(m_PositionsParent.GetChild(i));
         }
 
         LoadLevelFigures(GameManager.m_CurrentLevelIndex);
-
-        m_MaterialController.SetColors();
     }
 
-    private void LoadLevelFigures(int levelIndex)
+    public void LoadLevelFigures(int levelIndex)
     {
         LevelData currentLevel = levelsSO.GetAllLevels()[levelIndex];
         List<LevelsFigures> figures = currentLevel.m_Figures;
@@ -42,5 +44,18 @@ public class LevelSelectorManager : MonoBehaviour
         GameObject figureTarget = Instantiate(currentLevel.m_LevelMesh, Vector3.zero, Quaternion.identity);
         figureTarget.name = currentLevel.m_LevelName;
         figureTarget.tag = "Shape";
+        figureTarget.transform.position = SnapToGrid(figureTarget.transform.position);
+
+        m_MaterialController.SetColors();
+    }
+
+    private Vector3 SnapToGrid(Vector3 pos)
+    {
+        float size = grid.cellSize;
+
+        float x = Mathf.Round((pos.x - grid.transform.position.x) / size) * size + grid.transform.position.x;
+        float y = Mathf.Round((pos.y - grid.transform.position.y) / size) * size + grid.transform.position.y;
+
+        return new Vector3(x, y, pos.z);
     }
 }

@@ -1,139 +1,154 @@
+using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TangramShapeChecker : MonoBehaviour
 {
-    [Header("Tolerancias")]
-    public float areaTolerance = 0.01f;
-    public float hullTolerance = 0.01f;
+    [Header("Rasterizado")]
+    [Tooltip("Más pequeño = más preciso, más lento")]
+    public float rasterCellSize = 0.05f;
+
+    [Header("Umbral de coincidencia")]
+    [Range(0.8f, 1f)]
+    [Tooltip("0.97 suele ir bien para bordes compartidos")]
+    public float matchThreshold = 0.97f;
 
     public Transform m_FiguresParent;
     private GameObject m_FigureToCheck;
+
+    public GameObject m_CompletedText;
+
+    public LevelsScriptableObject m_CurrentLevel;
 
     private void Start()
     {
         GetComponent<Button>().onClick.AddListener(CompareMeshes);
         m_FigureToCheck = GameObject.FindGameObjectWithTag("Shape");
+        matchThreshold = m_CurrentLevel.GetAllLevels()[GameManager.m_CurrentLevelIndex].m_MatchThreshold;
     }
 
     public void CompareMeshes()
     {
-        Mesh meshA = m_FigureToCheck.GetComponent<MeshFilter>().mesh;
-        Mesh meshB = GenerateTangramMesh();
+        if (m_FigureToCheck == null || m_FiguresParent == null) return;
 
-        // --- Proyección a 2D ---
-        Vector2[] vertsA = ProjectTo2D(meshA);
-        Vector2[] vertsB = ProjectTo2D(meshB);
+        MeshFilter mfA = m_FigureToCheck.GetComponent<MeshFilter>();
+        if (mfA == null || mfA.sharedMesh == null) return;
 
-        // --- Área ---
-        float areaA = PolygonArea(vertsA, meshA.triangles);
-        float areaB = PolygonArea(vertsB, meshB.triangles);
+        Mesh targetMesh = mfA.sharedMesh;             // figura objetivo (shape blanca)
+        Mesh placedMesh = GenerateTangramMesh();      // piezas colocadas combinadas
 
-        if (Mathf.Abs(areaA - areaB) > areaTolerance)
+        var target = RasterizeMesh(targetMesh, m_FigureToCheck.transform.localToWorldMatrix);
+        var placed = RasterizeMesh(placedMesh, Matrix4x4.identity); // ya está en world
+
+        if (target.Count == 0 || placed.Count == 0) return;
+
+        int intersection = 0;
+        foreach (var cell in placed)
+            if (target.Contains(cell))
+                intersection++;
+
+        float coverageTarget = (float)intersection / target.Count; // cuánto del objetivo está cubierto
+        float coveragePlaced = (float)intersection / placed.Count; // cuánto de lo colocado cae dentro
+
+        if (coverageTarget >= matchThreshold && coveragePlaced >= matchThreshold)
         {
-            Debug.Log(false);
-            return;
+            StartCoroutine(LoadNewLevel());
+            Debug.Log("Level Completed!");
         }
-
-        // --- Convex Hull ---
-        List<Vector2> hullA = ConvexHull(new List<Vector2>(vertsA));
-        List<Vector2> hullB = ConvexHull(new List<Vector2>(vertsB));
-
-        if (!CompareHulls(hullA, hullB, hullTolerance))
-        {
-            Debug.Log(false);
-            return;
-        }
-
-        Debug.Log(true);
+        else
+            Debug.Log("Keep Trying!");
     }
 
-    Vector2[] ProjectTo2D(Mesh mesh)
+    HashSet<Vector2Int> RasterizeMesh(Mesh mesh, Matrix4x4 l2w)
     {
-        Vector3[] verts = mesh.vertices;
-        Vector2[] verts2D = new Vector2[verts.Length];
+        float cell = Mathf.Max(0.001f, rasterCellSize);
 
-        for (int i = 0; i < verts.Length; i++)
-            verts2D[i] = new Vector2(verts[i].x, verts[i].y);
+        // Bounds en world (transformando sus 8 esquinas)
+        Bounds b = mesh.bounds;
 
-        return verts2D;
-    }
-
-    float PolygonArea(Vector2[] verts, int[] tris)
-    {
-        float area = 0f;
-
-        for (int i = 0; i < tris.Length; i += 3)
+        Vector3[] corners =
         {
-            Vector2 a = verts[tris[i]];
-            Vector2 b = verts[tris[i + 1]];
-            Vector2 c = verts[tris[i + 2]];
+            new Vector3(b.min.x, b.min.y, b.min.z),
+            new Vector3(b.min.x, b.min.y, b.max.z),
+            new Vector3(b.min.x, b.max.y, b.min.z),
+            new Vector3(b.min.x, b.max.y, b.max.z),
+            new Vector3(b.max.x, b.min.y, b.min.z),
+            new Vector3(b.max.x, b.min.y, b.max.z),
+            new Vector3(b.max.x, b.max.y, b.min.z),
+            new Vector3(b.max.x, b.max.y, b.max.z),
+        };
 
-            area += Mathf.Abs(
-                (a.x * (b.y - c.y) +
-                 b.x * (c.y - a.y) +
-                 c.x * (a.y - b.y)) * 0.5f
-            );
+        Vector3 wMin = l2w.MultiplyPoint3x4(corners[0]);
+        Vector3 wMax = wMin;
+
+        for (int i = 1; i < corners.Length; i++)
+        {
+            Vector3 w = l2w.MultiplyPoint3x4(corners[i]);
+            wMin = Vector3.Min(wMin, w);
+            wMax = Vector3.Max(wMax, w);
         }
 
-        return area;
-    }
+        HashSet<Vector2Int> filled = new HashSet<Vector2Int>();
 
-    List<Vector2> ConvexHull(List<Vector2> points)
-    {
-        if (points.Count <= 1) return points;
-
-        points.Sort((a, b) =>
-            a.x == b.x ? a.y.CompareTo(b.y) : a.x.CompareTo(b.x)
-        );
-
-        List<Vector2> hull = new List<Vector2>();
-
-        // Lower hull
-        foreach (var p in points)
+        // Muestreo en el bounding box
+        for (float x = wMin.x; x <= wMax.x; x += cell)
         {
-            while (hull.Count >= 2 &&
-                   Cross(hull[hull.Count - 2], hull[hull.Count - 1], p) <= 0)
-                hull.RemoveAt(hull.Count - 1);
+            for (float y = wMin.y; y <= wMax.y; y += cell)
+            {
+                Vector2 p = new Vector2(x, y);
 
-            hull.Add(p);
+                if (PointInsideMesh(p, mesh, l2w))
+                {
+                    int gx = Mathf.RoundToInt(x / cell);
+                    int gy = Mathf.RoundToInt(y / cell);
+                    filled.Add(new Vector2Int(gx, gy));
+                }
+            }
         }
 
-        // Upper hull
-        int t = hull.Count + 1;
-        for (int i = points.Count - 1; i >= 0; i--)
-        {
-            var p = points[i];
-            while (hull.Count >= t &&
-                   Cross(hull[hull.Count - 2], hull[hull.Count - 1], p) <= 0)
-                hull.RemoveAt(hull.Count - 1);
-
-            hull.Add(p);
-        }
-
-        hull.RemoveAt(hull.Count - 1);
-        return hull;
+        return filled;
     }
 
-    float Cross(Vector2 o, Vector2 a, Vector2 b)
+    bool PointInsideMesh(Vector2 worldPoint, Mesh mesh, Matrix4x4 l2w)
     {
-        return (a.x - o.x) * (b.y - o.y) -
-               (a.y - o.y) * (b.x - o.x);
+        Vector3[] v = mesh.vertices;
+        int[] t = mesh.triangles;
+
+        for (int i = 0; i < t.Length; i += 3)
+        {
+            Vector2 a = (Vector2)l2w.MultiplyPoint3x4(v[t[i]]);
+            Vector2 b = (Vector2)l2w.MultiplyPoint3x4(v[t[i + 1]]);
+            Vector2 c = (Vector2)l2w.MultiplyPoint3x4(v[t[i + 2]]);
+
+            if (PointInTriangle(worldPoint, a, b, c))
+                return true;
+        }
+        return false;
     }
 
-    bool CompareHulls(List<Vector2> a, List<Vector2> b, float tolerance)
+    bool PointInTriangle(Vector2 p, Vector2 a, Vector2 b, Vector2 c)
     {
-        if (a.Count != b.Count) return false;
+        // Barycentric
+        Vector2 v0 = c - a;
+        Vector2 v1 = b - a;
+        Vector2 v2 = p - a;
 
-        for (int i = 0; i < a.Count; i++)
-        {
-            if (Vector2.Distance(a[i], b[i]) > tolerance)
-                return false;
-        }
+        float dot00 = Vector2.Dot(v0, v0);
+        float dot01 = Vector2.Dot(v0, v1);
+        float dot02 = Vector2.Dot(v0, v2);
+        float dot11 = Vector2.Dot(v1, v1);
+        float dot12 = Vector2.Dot(v1, v2);
 
-        return true;
+        float denom = dot00 * dot11 - dot01 * dot01;
+        if (Mathf.Abs(denom) < 1e-8f) return false;
+
+        float inv = 1f / denom;
+        float u = (dot11 * dot02 - dot01 * dot12) * inv;
+        float v = (dot00 * dot12 - dot01 * dot02) * inv;
+
+        return (u >= 0f) && (v >= 0f) && (u + v <= 1f);
     }
 
     public Mesh GenerateTangramMesh()
@@ -147,7 +162,7 @@ public class TangramShapeChecker : MonoBehaviour
 
             CombineInstance ci = new CombineInstance();
             ci.mesh = mf.sharedMesh;
-            ci.transform = mf.transform.localToWorldMatrix;
+            ci.transform = mf.transform.localToWorldMatrix; // a world
             combineList.Add(ci);
         }
 
@@ -157,5 +172,16 @@ public class TangramShapeChecker : MonoBehaviour
         finalMesh.RecalculateBounds();
 
         return finalMesh;
+    }
+
+    public IEnumerator LoadNewLevel()
+    {
+        if (m_CompletedText != null)
+            m_CompletedText.gameObject.SetActive(true);
+
+        GameManager.m_CurrentLevelIndex++;
+        yield return new WaitForSeconds(3f);
+
+        SceneManager.LoadScene("Game");
     }
 }
