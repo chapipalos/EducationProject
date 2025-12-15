@@ -16,7 +16,8 @@ public class SheetsSummarySender : MonoBehaviour
             totalTime = GameManager.m_TotalTime,
             totalClicks = GameManager.m_TotalClicks,
             totalRotations = GameManager.m_TotalRotations,
-            levelsCompleted = GameManager.m_LevelsCompleted
+            levelsCompleted = GameManager.m_LevelsCompleted,
+            levelsSkipped = GameManager.m_LevelsSkipped
         };
 
         StartCoroutine(PostSummary(summary));
@@ -47,5 +48,6 @@ public class GameSummary
     public int totalClicks;
     public int totalRotations;
     public int levelsCompleted;
+    public int levelsSkipped;
 }
 

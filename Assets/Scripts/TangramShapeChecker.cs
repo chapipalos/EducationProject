@@ -15,95 +15,147 @@ public class TangramShapeChecker : MonoBehaviour
     [Tooltip("0.97 suele ir bien para bordes compartidos")]
     public float matchThreshold = 0.97f;
 
+    [Header("Referencias")]
     public Transform m_FiguresParent;
-    private GameObject m_FigureToCheck;
-
     public GameObject m_CompletedText;
-
     public LevelsScriptableObject m_CurrentLevel;
+
+    [Header("Botones")]
+    public Button checkButton;
+    public Button skipButton;
+
+    private GameObject m_FigureToCheck;
 
     private void Start()
     {
-        GetComponent<Button>().onClick.AddListener(CompareMeshes);
         m_FigureToCheck = GameObject.FindGameObjectWithTag("Shape");
-        matchThreshold = m_CurrentLevel.GetAllLevels()[GameManager.m_CurrentLevelIndex].m_MatchThreshold;
+
+        if (m_CurrentLevel != null && GameManager.m_CurrentLevelIndex < m_CurrentLevel.GetAllLevels().Count)
+        {
+            matchThreshold = m_CurrentLevel.GetAllLevels()[GameManager.m_CurrentLevelIndex].m_MatchThreshold;
+        }
+
+        // Configurar botones
+        if (checkButton != null)
+            checkButton.onClick.AddListener(CheckShape);
+
+        if (skipButton != null)
+            skipButton.onClick.AddListener(SkipLevel);
     }
 
-    public void CompareMeshes()
+    // Verifica si las piezas del tangram coinciden con la figura objetivo
+    public void CheckShape()
     {
-        if (m_FigureToCheck == null || m_FiguresParent == null) return;
+        if (!ValidateReferences()) return;
 
-        MeshFilter mfA = m_FigureToCheck.GetComponent<MeshFilter>();
-        if (mfA == null || mfA.sharedMesh == null) return;
+        MeshFilter mfTarget = m_FigureToCheck.GetComponent<MeshFilter>();
+        if (mfTarget == null || mfTarget.sharedMesh == null)
+        {
+            Debug.LogWarning("No se pudo obtener el mesh de la figura objetivo");
+            return;
+        }
 
-        Mesh targetMesh = mfA.sharedMesh;             // figura objetivo (shape blanca)
-        Mesh placedMesh = GenerateTangramMesh();      // piezas colocadas combinadas
+        Mesh targetMesh = mfTarget.sharedMesh;
+        Mesh placedMesh = GenerateTangramMesh();
 
-        var target = RasterizeMesh(targetMesh, m_FigureToCheck.transform.localToWorldMatrix);
-        var placed = RasterizeMesh(placedMesh, Matrix4x4.identity); // ya está en world
+        var targetCells = RasterizeMesh(targetMesh, m_FigureToCheck.transform.localToWorldMatrix);
+        var placedCells = RasterizeMesh(placedMesh, Matrix4x4.identity);
 
-        if (target.Count == 0 || placed.Count == 0) return;
+        if (targetCells.Count == 0 || placedCells.Count == 0)
+        {
+            Debug.LogWarning("No se pudieron rasterizar las mallas correctamente");
+            return;
+        }
 
+        // Calcular intersección
         int intersection = 0;
-        foreach (var cell in placed)
-            if (target.Contains(cell))
+        foreach (var cell in placedCells)
+        {
+            if (targetCells.Contains(cell))
                 intersection++;
+        }
 
-        float coverageTarget = (float)intersection / target.Count; // cuánto del objetivo está cubierto
-        float coveragePlaced = (float)intersection / placed.Count; // cuánto de lo colocado cae dentro
+        float coverageTarget = (float)intersection / targetCells.Count;
+        float coveragePlaced = (float)intersection / placedCells.Count;
+
+        Debug.Log($"Cobertura objetivo: {coverageTarget:P2} | Cobertura colocada: {coveragePlaced:P2}");
 
         if (coverageTarget >= matchThreshold && coveragePlaced >= matchThreshold)
         {
-            StartCoroutine(LoadNewLevel());
-            Debug.Log("Level Completed!");
+            OnLevelCompleted();
         }
         else
-            Debug.Log("Keep Trying!");
+        {
+            OnLevelFailed();
+        }
     }
 
-    HashSet<Vector2Int> RasterizeMesh(Mesh mesh, Matrix4x4 l2w)
+    // Salta el nivel actual sin completarlo
+    public void SkipLevel()
+    {
+        StartCoroutine(LoadNextLevel(false));
+        Debug.Log("Level Skipped!");
+    }
+
+    private void OnLevelCompleted()
+    {
+        Debug.Log("¡Nivel Completado!");
+        StartCoroutine(LoadNextLevel(true));
+    }
+
+    private void OnLevelFailed()
+    {
+        Debug.Log("¡Sigue intentándolo!");
+    }
+
+    private bool ValidateReferences()
+    {
+        if (m_FigureToCheck == null)
+        {
+            Debug.LogError("No se encontró la figura objetivo con tag 'Shape'");
+            return false;
+        }
+
+        if (m_FiguresParent == null)
+        {
+            Debug.LogError("FiguresParent no está asignado");
+            return false;
+        }
+
+        return true;
+    }
+
+    private HashSet<Vector2Int> RasterizeMesh(Mesh mesh, Matrix4x4 localToWorld)
     {
         float cell = Mathf.Max(0.001f, rasterCellSize);
+        HashSet<Vector2Int> filled = new HashSet<Vector2Int>();
 
-        // Bounds en world (transformando sus 8 esquinas)
-        Bounds b = mesh.bounds;
+        // Calcular bounds en espacio mundo
+        Bounds bounds = mesh.bounds;
+        Vector3[] corners = GetBoundsCorners(bounds);
 
-        Vector3[] corners =
-        {
-            new Vector3(b.min.x, b.min.y, b.min.z),
-            new Vector3(b.min.x, b.min.y, b.max.z),
-            new Vector3(b.min.x, b.max.y, b.min.z),
-            new Vector3(b.min.x, b.max.y, b.max.z),
-            new Vector3(b.max.x, b.min.y, b.min.z),
-            new Vector3(b.max.x, b.min.y, b.max.z),
-            new Vector3(b.max.x, b.max.y, b.min.z),
-            new Vector3(b.max.x, b.max.y, b.max.z),
-        };
-
-        Vector3 wMin = l2w.MultiplyPoint3x4(corners[0]);
-        Vector3 wMax = wMin;
+        Vector3 worldMin = localToWorld.MultiplyPoint3x4(corners[0]);
+        Vector3 worldMax = worldMin;
 
         for (int i = 1; i < corners.Length; i++)
         {
-            Vector3 w = l2w.MultiplyPoint3x4(corners[i]);
-            wMin = Vector3.Min(wMin, w);
-            wMax = Vector3.Max(wMax, w);
+            Vector3 worldPoint = localToWorld.MultiplyPoint3x4(corners[i]);
+            worldMin = Vector3.Min(worldMin, worldPoint);
+            worldMax = Vector3.Max(worldMax, worldPoint);
         }
 
-        HashSet<Vector2Int> filled = new HashSet<Vector2Int>();
-
-        // Muestreo en el bounding box
-        for (float x = wMin.x; x <= wMax.x; x += cell)
+        // Muestreo del área
+        for (float x = worldMin.x; x <= worldMax.x; x += cell)
         {
-            for (float y = wMin.y; y <= wMax.y; y += cell)
+            for (float y = worldMin.y; y <= worldMax.y; y += cell)
             {
-                Vector2 p = new Vector2(x, y);
+                Vector2 point = new Vector2(x, y);
 
-                if (PointInsideMesh(p, mesh, l2w))
+                if (PointInsideMesh(point, mesh, localToWorld))
                 {
-                    int gx = Mathf.RoundToInt(x / cell);
-                    int gy = Mathf.RoundToInt(y / cell);
-                    filled.Add(new Vector2Int(gx, gy));
+                    int gridX = Mathf.RoundToInt(x / cell);
+                    int gridY = Mathf.RoundToInt(y / cell);
+                    filled.Add(new Vector2Int(gridX, gridY));
                 }
             }
         }
@@ -111,26 +163,42 @@ public class TangramShapeChecker : MonoBehaviour
         return filled;
     }
 
-    bool PointInsideMesh(Vector2 worldPoint, Mesh mesh, Matrix4x4 l2w)
+    private Vector3[] GetBoundsCorners(Bounds bounds)
     {
-        Vector3[] v = mesh.vertices;
-        int[] t = mesh.triangles;
-
-        for (int i = 0; i < t.Length; i += 3)
+        return new Vector3[]
         {
-            Vector2 a = (Vector2)l2w.MultiplyPoint3x4(v[t[i]]);
-            Vector2 b = (Vector2)l2w.MultiplyPoint3x4(v[t[i + 1]]);
-            Vector2 c = (Vector2)l2w.MultiplyPoint3x4(v[t[i + 2]]);
+            new Vector3(bounds.min.x, bounds.min.y, bounds.min.z),
+            new Vector3(bounds.min.x, bounds.min.y, bounds.max.z),
+            new Vector3(bounds.min.x, bounds.max.y, bounds.min.z),
+            new Vector3(bounds.min.x, bounds.max.y, bounds.max.z),
+            new Vector3(bounds.max.x, bounds.min.y, bounds.min.z),
+            new Vector3(bounds.max.x, bounds.min.y, bounds.max.z),
+            new Vector3(bounds.max.x, bounds.max.y, bounds.min.z),
+            new Vector3(bounds.max.x, bounds.max.y, bounds.max.z),
+        };
+    }
+
+    private bool PointInsideMesh(Vector2 worldPoint, Mesh mesh, Matrix4x4 localToWorld)
+    {
+        Vector3[] vertices = mesh.vertices;
+        int[] triangles = mesh.triangles;
+
+        for (int i = 0; i < triangles.Length; i += 3)
+        {
+            Vector2 a = localToWorld.MultiplyPoint3x4(vertices[triangles[i]]);
+            Vector2 b = localToWorld.MultiplyPoint3x4(vertices[triangles[i + 1]]);
+            Vector2 c = localToWorld.MultiplyPoint3x4(vertices[triangles[i + 2]]);
 
             if (PointInTriangle(worldPoint, a, b, c))
                 return true;
         }
+
         return false;
     }
 
-    bool PointInTriangle(Vector2 p, Vector2 a, Vector2 b, Vector2 c)
+    private bool PointInTriangle(Vector2 p, Vector2 a, Vector2 b, Vector2 c)
     {
-        // Barycentric
+        // Coordenadas baricéntricas
         Vector2 v0 = c - a;
         Vector2 v1 = b - a;
         Vector2 v2 = p - a;
@@ -141,17 +209,17 @@ public class TangramShapeChecker : MonoBehaviour
         float dot11 = Vector2.Dot(v1, v1);
         float dot12 = Vector2.Dot(v1, v2);
 
-        float denom = dot00 * dot11 - dot01 * dot01;
-        if (Mathf.Abs(denom) < 1e-8f) return false;
+        float denominator = dot00 * dot11 - dot01 * dot01;
+        if (Mathf.Abs(denominator) < 1e-8f) return false;
 
-        float inv = 1f / denom;
-        float u = (dot11 * dot02 - dot01 * dot12) * inv;
-        float v = (dot00 * dot12 - dot01 * dot02) * inv;
+        float invDenom = 1f / denominator;
+        float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+        float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
         return (u >= 0f) && (v >= 0f) && (u + v <= 1f);
     }
 
-    public Mesh GenerateTangramMesh()
+    private Mesh GenerateTangramMesh()
     {
         MeshFilter[] filters = m_FiguresParent.GetComponentsInChildren<MeshFilter>();
         List<CombineInstance> combineList = new List<CombineInstance>();
@@ -160,30 +228,48 @@ public class TangramShapeChecker : MonoBehaviour
         {
             if (mf.sharedMesh == null) continue;
 
-            CombineInstance ci = new CombineInstance();
-            ci.mesh = mf.sharedMesh;
-            ci.transform = mf.transform.localToWorldMatrix; // a world
+            CombineInstance ci = new CombineInstance
+            {
+                mesh = mf.sharedMesh,
+                transform = mf.transform.localToWorldMatrix
+            };
             combineList.Add(ci);
         }
 
-        Mesh finalMesh = new Mesh();
-        finalMesh.CombineMeshes(combineList.ToArray(), true, true);
-        finalMesh.RecalculateNormals();
-        finalMesh.RecalculateBounds();
+        Mesh combinedMesh = new Mesh();
+        combinedMesh.CombineMeshes(combineList.ToArray(), true, true);
+        combinedMesh.RecalculateNormals();
+        combinedMesh.RecalculateBounds();
 
-        return finalMesh;
+        return combinedMesh;
     }
 
-    public IEnumerator LoadNewLevel()
+    private IEnumerator LoadNextLevel(bool completed)
     {
-        if (m_CompletedText != null)
-            m_CompletedText.gameObject.SetActive(true);
+        // Mostrar texto de completado si corresponde
+        if (completed && m_CompletedText != null)
+        {
+            m_CompletedText.SetActive(true);
+        }
 
-        GameManager.m_LevelsCompleted++;
+        // Actualizar contadores
+        if (completed)
+            GameManager.m_LevelsCompleted++;
+        else
+            GameManager.m_LevelsSkipped++;
+
+        // Avanzar al siguiente nivel
         GameManager.m_CurrentLevelIndex++;
+
+        // Wrap around si llegamos al final
         if (GameManager.m_CurrentLevelIndex >= m_CurrentLevel.GetAllLevels().Count)
+        {
             GameManager.m_CurrentLevelIndex = 0;
-        if (GameManager.m_LevelsCompleted >= m_CurrentLevel.GetAllLevels().Count)
+        }
+
+        // Verificar si terminamos todos los niveles
+        int totalProcessed = GameManager.m_LevelsCompleted + GameManager.m_LevelsSkipped;
+        if (totalProcessed >= m_CurrentLevel.GetAllLevels().Count)
         {
             GameManager.m_IsGameOver = true;
             yield return new WaitForSeconds(0f);
@@ -191,10 +277,13 @@ public class TangramShapeChecker : MonoBehaviour
         }
         else
         {
-            yield return new WaitForSeconds(3f);
-            GameManager.m_TotalTime -= 3f;
+            float waitTime = completed ? 3f : 0f;
+            yield return new WaitForSeconds(waitTime);
+
+            if (completed)
+                GameManager.m_TotalTime -= 3f;
+
             SceneManager.LoadScene("Game");
         }
-
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class TimeController : MonoBehaviour
 {
-    public float m_GameDuration = 500f;
+    public float m_GameDuration = 0f;
     // Update is called once per frame
     void Update()
     {
