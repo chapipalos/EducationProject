@@ -10,5 +10,7 @@ public class StatsController : MonoBehaviour
     {
         m_LevelsScoreText.text = GameManager.m_LevelsCompleted.ToString();
         m_TimeScoreText.text = GameManager.m_TotalTime.ToString() + "s";
+        FindAnyObjectByType<StatsToExport>().SendGameSummary();
+
     }
 }
