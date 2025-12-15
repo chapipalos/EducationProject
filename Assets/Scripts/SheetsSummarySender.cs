@@ -1,29 +1,18 @@
-using System.Text;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
-using System.Collections;
+using System.Text;
 
-public class StatsToExport : MonoBehaviour
+public class SheetsSummarySender : MonoBehaviour
 {
-    [System.Serializable]
-    public class GameSummary
-    {
-        public string playerName;
-        public bool typeGame;
-        public float totalTime;
-        public int totalClicks;
-        public int totalRotations;
-        public int levelsCompleted;
-    }
-
-    [SerializeField] private string webAppUrl = "https://script.google.com/macros/s/AKfycby-eO9hemwqASutvU-AgiIh-JULyGXXrs4Zb_DfEtkPSj7fHqBR2_-wkXuuDewdZTU8/exec";
+    private string webAppUrl = "https://script.google.com/macros/s/AKfycbybWZJTTkIEgTHcIChs8C1kWo_C9mgS5k6YwHD-GfJt2jJ399Ls-vpEyz9bmc8mhGwQtw/exec";
 
     public void SendGameSummary()
     {
         GameSummary summary = new GameSummary
         {
             playerName = GameManager.m_PlayerName,
-            typeGame = GameManager.m_TypeGame,
+            typeGame = GameManager.m_TypeGame? "Colors" : "Black",
             totalTime = GameManager.m_TotalTime,
             totalClicks = GameManager.m_TotalClicks,
             totalRotations = GameManager.m_TotalRotations,
@@ -48,3 +37,15 @@ public class StatsToExport : MonoBehaviour
             Debug.LogError(req.error);
     }
 }
+
+[System.Serializable]
+public class GameSummary
+{
+    public string playerName;
+    public string typeGame;
+    public float totalTime;
+    public int totalClicks;
+    public int totalRotations;
+    public int levelsCompleted;
+}
+

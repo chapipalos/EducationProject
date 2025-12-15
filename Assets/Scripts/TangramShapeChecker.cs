@@ -181,6 +181,8 @@ public class TangramShapeChecker : MonoBehaviour
 
         GameManager.m_LevelsCompleted++;
         GameManager.m_CurrentLevelIndex++;
+        if (GameManager.m_CurrentLevelIndex >= m_CurrentLevel.GetAllLevels().Count)
+            GameManager.m_CurrentLevelIndex = 0;
         if (GameManager.m_LevelsCompleted >= m_CurrentLevel.GetAllLevels().Count)
         {
             GameManager.m_IsGameOver = true;

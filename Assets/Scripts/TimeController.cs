@@ -22,7 +22,6 @@ public class TimeController : MonoBehaviour
         {
             GameManager.m_IsGameOver = true;
             SceneManager.LoadScene("Stats");
-            //FindAnyObjectByType<StatsToExport>().SendGameSummary();
         }
     }
 }

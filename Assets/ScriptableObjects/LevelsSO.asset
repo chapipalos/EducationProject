@@ -26,7 +26,7 @@ MonoBehaviour:
       m_Amount: 1
     - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
       m_Amount: 1
-    m_MatchThreshold: 0.98
+    m_MatchThreshold: 0.97
   - m_LevelName: Candle
     m_LevelMesh: {fileID: 7741316859236190244, guid: 99dbf28fd11a28b4f88fe9b770a73c7d, type: 3}
     m_Figures:
@@ -40,7 +40,7 @@ MonoBehaviour:
       m_Amount: 1
     - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
       m_Amount: 1
-    m_MatchThreshold: 0.98
+    m_MatchThreshold: 0.965
   - m_LevelName: Cat
     m_LevelMesh: {fileID: 3948116061310534166, guid: 7a49327e1ed1a7e4b85b83336cb8ba16, type: 3}
     m_Figures:
@@ -54,7 +54,7 @@ MonoBehaviour:
       m_Amount: 1
     - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
       m_Amount: 1
-    m_MatchThreshold: 0.98
+    m_MatchThreshold: 0.97
   - m_LevelName: Chicken
     m_LevelMesh: {fileID: 5191458863231458644, guid: 5637f0ac77dd1df4dbdc29c6020ea8f1, type: 3}
     m_Figures:
@@ -68,7 +68,7 @@ MonoBehaviour:
       m_Amount: 1
     - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
       m_Amount: 1
-    m_MatchThreshold: 0.975
+    m_MatchThreshold: 0.95
   - m_LevelName: Fish
     m_LevelMesh: {fileID: 726481726892526756, guid: a6fb1d3786cddfe4e9586e2f1017034d, type: 3}
     m_Figures:
@@ -82,7 +82,7 @@ MonoBehaviour:
       m_Amount: 1
     - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
       m_Amount: 1
-    m_MatchThreshold: 0.98
+    m_MatchThreshold: 0.97
   - m_LevelName: Horse
     m_LevelMesh: {fileID: 3904732036900934450, guid: 51fd6c8b5ed014f41a976b662cb6fc93, type: 3}
     m_Figures:
@@ -96,7 +96,7 @@ MonoBehaviour:
       m_Amount: 1
     - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
       m_Amount: 1
-    m_MatchThreshold: 0.98
+    m_MatchThreshold: 0.97
   - m_LevelName: Swan
     m_LevelMesh: {fileID: 2544534299694460, guid: 9abb26b63d03f194b9d60b81a2fc95cf, type: 3}
     m_Figures:
@@ -110,7 +110,7 @@ MonoBehaviour:
       m_Amount: 1
     - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
       m_Amount: 1
-    m_MatchThreshold: 0.97
+    m_MatchThreshold: 0.95
   - m_LevelName: Vulture
     m_LevelMesh: {fileID: 3008806623054019172, guid: 1a71a1566e3a13f4cbeac4f69cfd7217, type: 3}
     m_Figures:
@@ -124,4 +124,4 @@ MonoBehaviour:
       m_Amount: 1
     - m_Figure: {fileID: 5692601106163815091, guid: cc817ed89bf5d2d408a1426ce1ac34db, type: 3}
       m_Amount: 1
-    m_MatchThreshold: 0.98
+    m_MatchThreshold: 0.97
