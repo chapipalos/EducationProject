@@ -45,8 +45,8 @@ public class FiguresController : MonoBehaviour
             {
                 isDragging = true;
                 offset = transform.position - (Vector3)worldPos;
+                GameManager.m_TotalClicks++;
             }
-            GameManager.m_TotalClicks++;
         }
 
         if (ctx.canceled)
@@ -68,8 +68,8 @@ public class FiguresController : MonoBehaviour
             if (hit.collider != null && hit.collider.gameObject == gameObject)
             {
                 transform.Rotate(0f, 0, m_AngleStep);
+                GameManager.m_TotalRotations++;
             }
-            GameManager.m_TotalRotations++;
         }
     }
 
