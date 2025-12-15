@@ -3,8 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class TimeController : MonoBehaviour
 {
-    public float m_GameDuration = 35f;
-    public float m_MaxTimeToTest = 600f;
+    public float m_GameDuration = 500f;
     // Update is called once per frame
     void Update()
     {
@@ -18,10 +17,6 @@ public class TimeController : MonoBehaviour
             SceneManager.LoadScene("Stats");
 
         }
-        if (GameManager.m_TotalTime > m_MaxTimeToTest)
-        {
-            GameManager.m_IsGameOver = true;
-            SceneManager.LoadScene("Stats");
-        }
+
     }
 }
