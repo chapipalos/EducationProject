@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: MaterialSelector
   m_EditorClassIdentifier: 
   m_Materials:
-  - {fileID: 2100000, guid: e0f1fe7269644354f9c8ea0d9a14432a, type: 2}
   - {fileID: 2100000, guid: e0ff63ac60da1ba4684bc3f17aed5642, type: 2}
   - {fileID: 2100000, guid: 7481c11e11282b84dae7973cd849ed77, type: 2}
   - {fileID: 2100000, guid: 7dbe558abcefa2a40826923f4409bd33, type: 2}

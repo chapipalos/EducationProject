@@ -34,19 +34,19 @@ public class LevelSelectorManager : MonoBehaviour
         int number = 0;
         foreach (LevelsFigures f in figures)
         {
-            for(int i = 0; i < f.m_Amount; i++)
+            for (int i = 0; i < f.m_Amount; i++)
             {
                 GameObject newFigure = Instantiate(f.m_Figure, m_FiguresPositions[number + i].position, Quaternion.identity, m_FiguresParent);
             }
             number += f.m_Amount;
         }
-
-        GameObject figureTarget = Instantiate(currentLevel.m_LevelMesh, Vector3.zero, Quaternion.identity);
+        GameObject figureTarget = Instantiate(currentLevel.m_LevelMesh);
         figureTarget.name = currentLevel.m_LevelName;
         figureTarget.tag = "Shape";
         figureTarget.transform.position = SnapToGrid(figureTarget.transform.position);
 
-        m_MaterialController.SetColors();
+        if (GameManager.m_TypeGame)
+            m_MaterialController.SetColors();
     }
 
     private Vector3 SnapToGrid(Vector3 pos)

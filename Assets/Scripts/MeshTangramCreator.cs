@@ -35,9 +35,9 @@ public class MeshTangramCreator : MonoBehaviour
         finalMesh.RecalculateNormals();
         finalMesh.RecalculateBounds();
 
-        string path = $"Assets/Meshes/Levels/{m_NameMesh}.asset";
-        AssetDatabase.CreateAsset(finalMesh, path);
-        AssetDatabase.SaveAssets();
+        //string path = $"Assets/Meshes/Levels/{m_NameMesh}.asset";
+        //AssetDatabase.CreateAsset(finalMesh, path);
+        //AssetDatabase.SaveAssets();
 
         m_NameMesh = string.Empty;
     }

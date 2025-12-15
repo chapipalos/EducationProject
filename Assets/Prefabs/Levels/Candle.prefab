@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4903827766674350967}
   - component: {fileID: 6221589983466250470}
   - component: {fileID: 5561477629266943353}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Candle
   m_TagString: Shape
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 7741316859236190244}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.3, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0.3, y: -0.5, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

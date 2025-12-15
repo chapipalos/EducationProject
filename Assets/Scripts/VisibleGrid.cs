@@ -73,19 +73,19 @@ public class VisibleGrid : MonoBehaviour
         }
     }
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(VisibleGrid))]
-    public class TriangleRectangleEditor : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector();
-            VisibleGrid myScript = (VisibleGrid)target;
-            if (GUILayout.Button("Eliminate Children"))
-            {
-                myScript.destroyChildren();
-            }
-        }
-    }
-#endif
+//#if UNITY_EDITOR
+//[CustomEditor(typeof(VisibleGrid))]
+//    public class TriangleRectangleEditor : Editor
+//    {
+//        public override void OnInspectorGUI()
+//        {
+//            DrawDefaultInspector();
+//            VisibleGrid myScript = (VisibleGrid)target;
+//            if (GUILayout.Button("Eliminate Children"))
+//            {
+//                myScript.destroyChildren();
+//            }
+//        }
+//    }
+//#endif
 }

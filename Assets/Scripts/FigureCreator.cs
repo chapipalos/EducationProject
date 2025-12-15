@@ -17,9 +17,9 @@ public class FigureCreator : MonoBehaviour
         m.RecalculateNormals();
         m.RecalculateBounds();
 
-        string path = "Assets/Meshes/SmallTriangle.asset";
-        AssetDatabase.CreateAsset(m, path);
-        AssetDatabase.SaveAssets();
+        //string path = "Assets/Meshes/SmallTriangle.asset";
+        //AssetDatabase.CreateAsset(m, path);
+        //AssetDatabase.SaveAssets();
     }
 
     public void MakeParalelogram()
@@ -43,9 +43,9 @@ public class FigureCreator : MonoBehaviour
         m.RecalculateNormals();
         m.RecalculateBounds();
 
-        string path = "Assets/Meshes/Paralelogram.asset";
-        AssetDatabase.CreateAsset(m, path);
-        AssetDatabase.SaveAssets();
+        //string path = "Assets/Meshes/Paralelogram.asset";
+        //AssetDatabase.CreateAsset(m, path);
+        //AssetDatabase.SaveAssets();
     }
 
     public void MakeMediumTriangleRectangle()
@@ -66,9 +66,9 @@ public class FigureCreator : MonoBehaviour
         m.RecalculateNormals();
         m.RecalculateBounds();
 
-        string path = "Assets/Meshes/MediumTriangle.asset";
-        AssetDatabase.CreateAsset(m, path);
-        AssetDatabase.SaveAssets();
+        //string path = "Assets/Meshes/MediumTriangle.asset";
+        //AssetDatabase.CreateAsset(m, path);
+        //AssetDatabase.SaveAssets();
     }
 
     public void MakeBigTriangleRectangle()
@@ -87,9 +87,9 @@ public class FigureCreator : MonoBehaviour
         m.RecalculateNormals();
         m.RecalculateBounds();
 
-        string path = "Assets/Meshes/BigTriangle.asset";
-        AssetDatabase.CreateAsset(m, path);
-        AssetDatabase.SaveAssets();
+        //string path = "Assets/Meshes/BigTriangle.asset";
+        //AssetDatabase.CreateAsset(m, path);
+        //AssetDatabase.SaveAssets();
     }
 
     public void MakeSquare()
@@ -111,9 +111,9 @@ public class FigureCreator : MonoBehaviour
         m.RecalculateNormals();
         m.RecalculateBounds();
 
-        string path = "Assets/Meshes/Square.asset";
-        AssetDatabase.CreateAsset(m, path);
-        AssetDatabase.SaveAssets();
+        //string path = "Assets/Meshes/Square.asset";
+        //AssetDatabase.CreateAsset(m, path);
+        //AssetDatabase.SaveAssets();
     }
 }
 

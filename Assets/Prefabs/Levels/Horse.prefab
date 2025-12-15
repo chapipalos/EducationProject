@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3001695898909155515}
   - component: {fileID: 511039024470120539}
   - component: {fileID: 1725917875961558164}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Horse
   m_TagString: Shape
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3904732036900934450}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.2, y: 0, z: 0}
+  m_LocalPosition: {x: 0.2, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
