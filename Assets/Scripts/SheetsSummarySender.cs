@@ -5,7 +5,7 @@ using System.Text;
 
 public class SheetsSummarySender : MonoBehaviour
 {
-    private string webAppUrl = "https://script.google.com/macros/s/AKfycbybWZJTTkIEgTHcIChs8C1kWo_C9mgS5k6YwHD-GfJt2jJ399Ls-vpEyz9bmc8mhGwQtw/exec";
+    private string webAppUrl = "https://script.google.com/macros/s/AKfycbxyIcJh_iZoXnHn5jZoYxYeWoRy5UM7FaQqaohvD92Blw2llZ0_YLRbTFiNHUViWtQVUg/exec";
 
     public void SendGameSummary()
     {
