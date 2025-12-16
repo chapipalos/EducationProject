@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
@@ -31,6 +32,7 @@ public class MainMenuController : MonoBehaviour
 
         GameManager.m_TypeGame = m_TypeGameToggle.isOn;
 
-        m_CanvasController.ShowLevelSelector();
+        GameManager.m_CurrentLevelIndex = 0;
+        SceneManager.LoadScene("Game");
     }
 }
